@@ -144,8 +144,21 @@ void packetChannels()
     }
     // TODO what to do with Channel 13,14,15,16 (NA,NA,LQ,RSSI)
 
-    // Set hat direction, 4 hats available. direction is clockwise 0=N 1=NE 2=E 3=SE 4=S 5=SW 6=W 7=NW 8=CENTER
-    // gamepad.SetHat(0, 8);
+    // SC - Channel 8 - Hat0 (3-way switch: down/mid/up -> W/C/E)
+    // Reported HIGH/LOW button data is unreliable for the down position
+    // (see btn_map above, id 3 / channel 8), so drive the hat off the raw
+    // channel value instead - unlike the S0/Slider axis, HAT0X/HAT0Y are
+    // actually exposed as evdev ABS axes on Linux.
+    channel_data = crsf.getChannel(8);
+    if (channel_data < CHANNEL_AUX_SW_LOW_MID_THRESH) {
+      gamepad.SetHat(0, HAT_DIR_W);
+    }
+    else if (channel_data > CHANNEL_AUX_SW_MID_HIGH_THRESH) {
+      gamepad.SetHat(0, HAT_DIR_E);
+    }
+    else {
+      gamepad.SetHat(0, HAT_DIR_C);
+    }
 
     gamepad.send_update();
 }

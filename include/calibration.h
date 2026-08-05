@@ -29,6 +29,11 @@
 #define CHANNEL_AUX_SW_MID 1510
 #define CHANNEL_AUX_SW_HIGH 2011
 
+// Midpoints between the 3 switch positions, used to bucket a raw channel
+// value into down/mid/up (e.g. for hat output on a 3-way switch)
+#define CHANNEL_AUX_SW_LOW_MID_THRESH ((CHANNEL_AUX_SW_LOW + CHANNEL_AUX_SW_MID) / 2)
+#define CHANNEL_AUX_SW_MID_HIGH_THRESH ((CHANNEL_AUX_SW_MID + CHANNEL_AUX_SW_HIGH) / 2)
+
 #define JOYSTICK_LOW (-32767)
 #define JOYSTICK_HIGH 32767
 #define CHANNEL_AUX_SW_LOW_MAP LOW
