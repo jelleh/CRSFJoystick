@@ -58,71 +58,37 @@ void packetChannels()
       JOYSTICK_HIGH);
     gamepad.SetY(map_data);
 
-    // Rx - Channel 3 - T
+    // Z (Axis2) - Throttle - Channel 3
     channel_data = crsf.getChannel(3);
     map_data = map(channel_data, \
       CHANNEL_3_LOW_EP,          \
       CHANNEL_3_HIGH_EP,         \
       JOYSTICK_LOW,              \
       JOYSTICK_HIGH);
-    gamepad.SetRx(map_data);
+    gamepad.SetZ(map_data);
 
-    // Ry - Channel 4 - R
+    // Rx (Axis3) - Yaw - Channel 4
     channel_data = crsf.getChannel(4);
     map_data = map(channel_data, \
       CHANNEL_4_LOW_EP,          \
       CHANNEL_4_HIGH_EP,         \
       JOYSTICK_LOW,              \
       JOYSTICK_HIGH);
+    gamepad.SetRx(map_data);
+
+    // Ry (Axis4) - S1 / wheel (BTN_PINKIE) - Channel 10
+    channel_data = crsf.getChannel(10);
+    map_data = map(channel_data, \
+      CHANNEL_10_LOW_EP,         \
+      CHANNEL_10_HIGH_EP,        \
+      JOYSTICK_LOW,              \
+      JOYSTICK_HIGH);
     gamepad.SetRy(map_data);
 
-    // Z - Channel 5
-    channel_data = crsf.getChannel(5);
-    map_data = map(channel_data, \
-      CHANNEL_5_LOW_EP,          \
-      CHANNEL_5_HIGH_EP,         \
-      JOYSTICK_LOW,              \
-      JOYSTICK_HIGH);
-    gamepad.SetZ(map_data);
-
-    // Rz - Channel 6
-    channel_data = crsf.getChannel(6);
-    map_data = map(channel_data, \
-      CHANNEL_6_LOW_EP,          \
-      CHANNEL_6_HIGH_EP,         \
-      JOYSTICK_LOW,              \
-      JOYSTICK_HIGH);
-    gamepad.SetRz(map_data);
-
-    // Rx - Channel 7
-    channel_data = crsf.getChannel(7);
-    map_data = map(channel_data, \
-      CHANNEL_7_LOW_EP,          \
-      CHANNEL_7_HIGH_EP,         \
-      JOYSTICK_LOW,              \
-      JOYSTICK_HIGH);
-    gamepad.SetThrottle(map_data);
-
-    // Rx - Channel 8
-    channel_data = crsf.getChannel(8);
-    map_data = map(channel_data, \
-      CHANNEL_8_LOW_EP,          \
-      CHANNEL_8_HIGH_EP,         \
-      JOYSTICK_LOW,              \
-      JOYSTICK_HIGH);
-    gamepad.SetS0(map_data);
-
-    // Ry - unused
-    // gamepad.SetRy(map_data);
-    // Rz - unused
-    // gamepad.SetRz(map_data);
-    // S0 - unused
-    // gamepad.SetS0(map_data);
-
-    // Multi-position switches can be set up in calibrations.h
-    // The button will report HIGH when the channel is withing
-    // a lower / upper bound (inclusive) constraint.
-    // Default is HIGH (1510, 2011) else LOW
+    // Multi-position switches are configured entirely in calibration.h -
+    // one button per physical switch position, no axis mirrors. The button
+    // will report HIGH when the channel is within a lower/upper bound
+    // (inclusive) constraint.
 
     for(uint8_t i = 0; i < NUM_BUTTONS; i++){
       c = &btn_map[i];
@@ -143,22 +109,6 @@ void packetChannels()
       #endif
     }
     // TODO what to do with Channel 13,14,15,16 (NA,NA,LQ,RSSI)
-
-    // SC - Channel 8 - Hat0 (3-way switch: down/mid/up -> W/C/E)
-    // Reported HIGH/LOW button data is unreliable for the down position
-    // (see btn_map above, id 3 / channel 8), so drive the hat off the raw
-    // channel value instead - unlike the S0/Slider axis, HAT0X/HAT0Y are
-    // actually exposed as evdev ABS axes on Linux.
-    channel_data = crsf.getChannel(8);
-    if (channel_data < CHANNEL_AUX_SW_LOW_MID_THRESH) {
-      gamepad.SetHat(0, HAT_DIR_W);
-    }
-    else if (channel_data > CHANNEL_AUX_SW_MID_HIGH_THRESH) {
-      gamepad.SetHat(0, HAT_DIR_E);
-    }
-    else {
-      gamepad.SetHat(0, HAT_DIR_C);
-    }
 
     gamepad.send_update();
 }
