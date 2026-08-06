@@ -14,10 +14,10 @@ Forked because I wanted a cleaner mapping for my RadioMaster T8L and Taranis X9D
 | 4 | Axis3 | Yaw | Yaw | Yaw |
 | 5 | Button 8 / 9 | SE | SF | ARM (pushed / released) |
 | 6 | Button 0 | SA | SE | Turtle mode |
-| 7 | Button 2 / 3 / 4 | SB | SC | --- (down / mid / up) |
+| 7 | Button 2 / 3 / 4 | SB | SC | Not used (down / mid / up) |
 | 8 | Button 5 / 6 / 7 | SC | SD | ACRO / LVL / HRZN (down / mid / up) |
 | 9 | Button 1 | SD | SH | Reset |
-| 10 | Axis4 | S1 | RS | |
+| 10 | Axis4 | S1 | RS | Not used |
 
 Buttons 2-9 are momentary: a switch flip fires a single pulse (`BTN_PULSE_MS` in `include/calibration.h`, default 200ms) instead of staying held. SA/SD (0/1) report the raw switch state directly since they're already physical momentary buttons.
 
