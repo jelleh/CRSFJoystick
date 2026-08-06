@@ -149,7 +149,7 @@ btn_config btn_map[NUM_BUTTONS] = {
     CHANNEL_AUX_SW_MID,                   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
     false,                                // invert
-    true                                  // momentary
+    false                                 // momentary
     },
 
     // Button 9 - ARM (SE) released/disarmed - Channel 5

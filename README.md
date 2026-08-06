@@ -12,7 +12,7 @@ Forked because I wanted a cleaner mapping for my RadioMaster T8L and Taranis X9D
 | 2 | Axis1 | Pitch | Pitch | Pitch |
 | 3 | Axis2 | Throttle | Throttle | Throttle |
 | 4 | Axis3 | Yaw | Yaw | Yaw |
-| 5 | Button 8 / 9 | SE | SF | ARM (pushed / released) |
+| 5 | Button 8 / 9 | SE | SF | ARM (pushed = held, released = momentary) |
 | 6 | Button 0 | SA | SE | Turtle mode |
 | 7 | Button 2 / 3 / 4 | SB | SC | Not used (down / mid / up) |
 | 8 | Button 5 / 6 / 7 | SC | SD | ACRO / LVL / HRZN (down / mid / up) |
