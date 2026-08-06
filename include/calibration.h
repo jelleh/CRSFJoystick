@@ -42,34 +42,44 @@
 #define CHANNEL_AUX_SW_LOW_MAP LOW
 #define CHANNEL_AUX_SW_HIGH_MAP HIGH
 
+// How long a momentary button reports pressed once triggered, regardless of
+// how long the switch is physically held (ms)
+#define BTN_PULSE_MS 200
+
 // upper bound and lower bound constrain where button reports HIGH and is inclusive
 // Typically use MID / HIGH
+// momentary: true = fire a single BTN_PULSE_MS pulse per transition into
+// range (for switches that don't already have a physical momentary action);
+// false = report the raw channel state directly, HIGH for as long as held
 typedef struct btn_config {
     byte channel;
     byte id;
     int lower_bound;
     int upper_bound;
     bool invert;
+    bool momentary;
 } btn_config;
 
 #define NUM_BUTTONS 10
 btn_config btn_map[NUM_BUTTONS] = {
-    // Button 0 - SA (momentary) - Channel 6
+    // Button 0 - SA (already a physical momentary button) - Channel 6
     {
     6,                                    // channel
     0,                                    // id
     CHANNEL_AUX_SW_MID,                   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    false                                 // invert
+    false,                                // invert
+    false                                 // momentary - physical switch is already momentary
     },
 
-    // Button 1 - SD (momentary) - Channel 9
+    // Button 1 - SD (already a physical momentary button) - Channel 9
     {
     9,                                    // channel
     1,                                    // id
     CHANNEL_AUX_SW_MID,                   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    false                                 // invert
+    false,                                // invert
+    false                                 // momentary - physical switch is already momentary
     },
 
     // Button 2 - SB down - Channel 7
@@ -78,7 +88,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     2,                                    // id
     0,                                    // lower bound
     CHANNEL_AUX_SW_LOW_MID_THRESH - 1,    // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 3 - SB mid - Channel 7
@@ -87,7 +98,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     3,                                    // id
     CHANNEL_AUX_SW_LOW_MID_THRESH,        // lower bound
     CHANNEL_AUX_SW_MID_HIGH_THRESH,       // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 4 - SB up - Channel 7
@@ -96,7 +108,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     4,                                    // id
     CHANNEL_AUX_SW_MID_HIGH_THRESH + 1,   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 5 - SC down - Channel 8
@@ -105,7 +118,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     5,                                    // id
     0,                                    // lower bound
     CHANNEL_AUX_SW_LOW_MID_THRESH - 1,    // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 6 - SC mid - Channel 8
@@ -114,7 +128,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     6,                                    // id
     CHANNEL_AUX_SW_LOW_MID_THRESH,        // lower bound
     CHANNEL_AUX_SW_MID_HIGH_THRESH,       // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 7 - SC up - Channel 8
@@ -123,7 +138,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     7,                                    // id
     CHANNEL_AUX_SW_MID_HIGH_THRESH + 1,   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 8 - ARM (SE) pushed/armed - Channel 5
@@ -132,7 +148,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     8,                                    // id
     CHANNEL_AUX_SW_MID,                   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    false                                 // invert
+    false,                                // invert
+    true                                  // momentary
     },
 
     // Button 9 - ARM (SE) released/disarmed - Channel 5
@@ -141,7 +158,8 @@ btn_config btn_map[NUM_BUTTONS] = {
     9,                                    // id
     CHANNEL_AUX_SW_MID,                   // lower bound
     CHANNEL_AUX_SW_HIGH,                  // upper bound
-    true                                  // invert
+    true,                                 // invert
+    true                                  // momentary
     }
 };
 

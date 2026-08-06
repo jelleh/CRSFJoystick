@@ -32,6 +32,10 @@ PicoGamepad gamepad;
 
 btn_config *c;
 
+static bool btn_prev_raw[NUM_BUTTONS];
+static bool btn_pulsing[NUM_BUTTONS];
+static unsigned long btn_pulse_start[NUM_BUTTONS];
+
 /***
  * This callback is called whenever new channel values are available.
  * Use crsf.getChannel(x) to get us channel values (1-16).
@@ -86,26 +90,40 @@ void packetChannels()
     gamepad.SetRy(map_data);
 
     // Multi-position switches are configured entirely in calibration.h -
-    // one button per physical switch position, no axis mirrors. The button
-    // will report HIGH when the channel is within a lower/upper bound
-    // (inclusive) constraint.
+    // one button per physical switch position, no axis mirrors.
+    // c->momentary buttons fire a single BTN_PULSE_MS-long pulse per
+    // transition into their bound range, regardless of how long the switch
+    // is held, and won't fire again until the switch leaves the range and
+    // re-enters it. Non-momentary buttons (SA/SD - already physical
+    // momentary switches) just report the raw channel state directly.
 
+    unsigned long ms_now = millis();
     for(uint8_t i = 0; i < NUM_BUTTONS; i++){
       c = &btn_map[i];
       channel_data = crsf.getChannel(c->channel);
       // bounds check inclusive
-      if(channel_data >= c->lower_bound && channel_data <= c->upper_bound) {
-        map_data = c->invert ? LOW : HIGH;
+      bool in_bounds = (channel_data >= c->lower_bound && channel_data <= c->upper_bound);
+      bool raw = c->invert ? !in_bounds : in_bounds;
+      bool out = raw;
+
+      if (c->momentary) {
+        if (raw && !btn_prev_raw[i] && !btn_pulsing[i]) {
+          btn_pulsing[i] = true;
+          btn_pulse_start[i] = ms_now;
+        }
+        if (btn_pulsing[i] && (ms_now - btn_pulse_start[i] >= BTN_PULSE_MS)) {
+          btn_pulsing[i] = false;
+        }
+        btn_prev_raw[i] = raw;
+        out = btn_pulsing[i];
       }
-      else {
-        map_data = c->invert ? HIGH : LOW;
-      }
-      gamepad.SetButton(c->id, map_data);
+
+      gamepad.SetButton(c->id, out);
 
       #ifdef BTN_PRINT
-      Serial.print("b: "); Serial.print(c->id));
+      Serial.print("b: "); Serial.print(c->id);
       Serial.print(" c: "); Serial.print(channel_data);
-      Serial.print(" m: "); Serial.println(map_data);
+      Serial.print(" o: "); Serial.println(out);
       #endif
     }
     // TODO what to do with Channel 13,14,15,16 (NA,NA,LQ,RSSI)
