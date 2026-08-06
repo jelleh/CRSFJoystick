@@ -6,34 +6,31 @@
 
 Remaps the T8L so every physical control has exactly one axis/button, and adds a configurable momentary-pulse mode for the aux switches.
 
-| Axis | Control |
-|---|---|
-| Axis0 (X) | Roll |
-| Axis1 (Y) | Pitch |
-| Axis2 (Z) | Throttle |
-| Axis3 (Rx) | Yaw |
-| Axis4 (Ry) | S1 / wheel |
-
-| Button | Control |
-|---|---|
-| 0 | SA |
-| 1 | SD |
-| 2 / 3 / 4 | SB down / mid / up |
-| 5 / 6 / 7 | SC down / mid / up |
-| 8 / 9 | ARM (SE) pushed / released |
+| Channel | HID Output | Input (T8L) | Input (X9D) | In Sim |
+|---|---|---|---|---|
+| 1 | Axis0 | Roll | Roll | Roll |
+| 2 | Axis1 | Pitch | Pitch | Pitch |
+| 3 | Axis2 | Throttle | Throttle | Throttle |
+| 4 | Axis3 | Yaw | Yaw | Yaw |
+| 5 | Button 8 / 9 | SE | SF | ARM (pushed / released) |
+| 6 | Button 0 | SA | SE | Turtle mode |
+| 7 | Button 2 / 3 / 4 | SB | SC | --- (down / mid / up) |
+| 8 | Button 5 / 6 / 7 | SC | SD | ACRO / LVL / HRZN (down / mid / up) |
+| 9 | Button 1 | SD | SH | Reset |
+| 10 | Axis4 | S1 | RS | |
 
 Buttons 2-9 are momentary: a switch flip fires a single pulse (`BTN_PULSE_MS` in `include/calibration.h`, default 200ms) instead of staying held. SA/SD (0/1) report the raw switch state directly since they're already physical momentary buttons.
 
 Moonlight / SDL controller mapping string:
 
 ```
-030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,x:b2,b:b3,y:b4,dpdown:b5,dpleft:b6,dpup:b7,leftstick:b8,rightstick:b9,platform:Linux,
+030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,dpdown:b2,dpleft:b3,dpup:b4,x:b5,b:b6,y:b7,leftstick:b8,rightstick:b9,platform:Linux,
 ```
 
 To make this mapping persistent across every launch, drop it into a systemd user environment file, e.g. `~/.config/environment.d/moonlight-elrs.conf`:
 
 ```
-SDL_GAMECONTROLLERCONFIG=030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,x:b2,b:b3,y:b4,dpdown:b5,dpleft:b6,dpup:b7,leftstick:b8,rightstick:b9,platform:Linux
+SDL_GAMECONTROLLERCONFIG=030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,dpdown:b2,dpleft:b3,dpup:b4,x:b5,b:b6,y:b7,leftstick:b8,rightstick:b9,platform:Linux
 ```
 
 Named CRSFJoystick as it indicates the wire protocol between the microcontroller (pi pico) and receiver).
