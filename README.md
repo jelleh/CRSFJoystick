@@ -2,6 +2,40 @@
 
 <https://github.com/mikeneiderhauser/CRSFJoystick>
 
+## This fork
+
+Remaps the T8L so every physical control has exactly one axis/button, and adds a configurable momentary-pulse mode for the aux switches.
+
+| Axis | Control |
+|---|---|
+| Axis0 (X) | Roll |
+| Axis1 (Y) | Pitch |
+| Axis2 (Z) | Throttle |
+| Axis3 (Rx) | Yaw |
+| Axis4 (Ry) | S1 / wheel |
+
+| Button | Control |
+|---|---|
+| 0 | SA |
+| 1 | SD |
+| 2 / 3 / 4 | SB down / mid / up |
+| 5 / 6 / 7 | SC down / mid / up |
+| 8 / 9 | ARM (SE) pushed / released |
+
+Buttons 2-9 are momentary: a switch flip fires a single pulse (`BTN_PULSE_MS` in `include/calibration.h`, default 200ms) instead of staying held. SA/SD (0/1) report the raw switch state directly since they're already physical momentary buttons.
+
+Moonlight / SDL controller mapping string:
+
+```
+030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,x:b2,b:b3,y:b4,dpdown:b5,dpleft:b6,dpup:b7,leftstick:b8,rightstick:b9,platform:Linux,
+```
+
+To make this mapping persistent across every launch, drop it into a systemd user environment file, e.g. `~/.config/environment.d/moonlight-elrs.conf`:
+
+```
+SDL_GAMECONTROLLERCONFIG=030023fa8a2e0000c000000011010000,Arduino RaspberryPi Pico,leftx:a0,lefty:a1,rightx:a3,righty:a2,lefttrigger:-a4,righttrigger:+a4,leftshoulder:b0,rightshoulder:b1,x:b2,b:b3,y:b4,dpdown:b5,dpleft:b6,dpup:b7,leftstick:b8,rightstick:b9,platform:Linux
+```
+
 Named CRSFJoystick as it indicates the wire protocol between the microcontroller (pi pico) and receiver).
 
 Arduino code using the mbed core that runs on a Pi Pico (2040) to emulate a USB HID Joystick
