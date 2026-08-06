@@ -4,7 +4,7 @@
 
 ## This fork
 
-Remaps the T8L so every physical control has exactly one axis/button, and adds a configurable momentary-pulse mode for the aux switches.
+Forked because I wanted a cleaner mapping for my RadioMaster T8L and Taranis X9D, for drone sims - either as direct USB HID input or streamed to another PC via Moonlight. Remaps every physical control to exactly one axis/button, adds a configurable momentary-pulse mode for the aux switches, and includes the matching Moonlight/SDL controller mapping.
 
 | Channel | HID Output | Input (T8L) | Input (X9D) | In Sim |
 |---|---|---|---|---|
